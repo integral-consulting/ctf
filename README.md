@@ -42,7 +42,7 @@ pip install ansible
 ## Konfigurasjon av VM
 
 For å hoste [CTFd][ctfd] selv trenger vi docker og docker compose.
-Dette kan installeres med ansible playbook'en [config.yml](./config.yml) i repoet, eller ved å følge docker sin [get started][docker-get-started] guide.
+Dette kan installeres med ansible playbook'en [config.yml][config] i repoet, eller ved å følge docker sin [get started][docker-get-started] guide.
 
 For å benytte ansible, oppdater [hosts][hosts] med hostname, ip og brukernavn på maskinen som skal konfigureres.
 Deretter kjør:
@@ -63,3 +63,4 @@ All dokumentasjon og konfigurasjon i dette repoet er også delt under
 [ubuntu-server]: https://ubuntu.com/download/server
 [docker-get-started]: https://docs.docker.com/engine/install/ubuntu/
 [hosts]: ./hosts
+[config]: ./config.yml
