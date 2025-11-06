@@ -44,6 +44,14 @@ pip install ansible
 For å hoste [CTFd][ctfd] selv trenger vi docker og docker compose.
 Dette kan installeres med ansible playbook'en [config.yml](./config.yml) i repoet, eller ved å følge docker sin [get started][docker-get-started] guide.
 
+For å benytte ansible, oppdater [hosts][hosts] med hostname, ip og brukernavn på maskinen som skal konfigureres.
+Deretter kjør:
+
+```shell
+ansible-playbook -i hosts config.yml --ask-become-pass
+```
+
+Dette vil installere docker på tilsvarende måte som i [get started][docker-get-started] guiden, samt opprette og tilordne gruppe til brukeren. Restart maskinen eller kjører `newgrp docker` for å kunne utføre `docker` kommandoer uten å benytte sudo.
 
 ## Lisens og kilde
 
@@ -54,3 +62,4 @@ All dokumentasjon og konfigurasjon i dette repoet er også delt under
 [ctfd]: https://ctfd.io/
 [ubuntu-server]: https://ubuntu.com/download/server
 [docker-get-started]: https://docs.docker.com/engine/install/ubuntu/
+[hosts]: ./hosts
