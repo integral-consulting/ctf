@@ -48,10 +48,21 @@ For å benytte ansible, oppdater [hosts][hosts] med hostname, ip og brukernavn p
 Deretter kjør:
 
 ```shell
+# --ask-become-pass prompter etter sudo passord på maskinen du skal konfigurere
 ansible-playbook -i hosts config.yml --ask-become-pass
 ```
 
 Dette vil installere docker på tilsvarende måte som i [get started][docker-get-started] guiden, samt opprette og tilordne gruppe til brukeren. Restart maskinen eller kjører `newgrp docker` for å kunne utføre `docker` kommandoer uten å benytte sudo.
+
+## Installasjon av CTFd
+
+Herfra og utover vil alle kommandoer utføres på maskinen hvor CTFd skal kjøre - altså VM'en vi konfigurerte i forrige steg.
+
+Det første vi gjør er å clone ned repoet:
+
+```shell
+git clone https://github.com/ctfd/ctfd
+```
 
 ## Lisens og kilde
 
