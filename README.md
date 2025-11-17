@@ -1,5 +1,8 @@
 # ctf
 
+> [!WARNING]
+> Instruksjonene er under utarbeidelse...
+
 Dette repoet dokumenterer hvordan man setter opp [CTFd][ctfd] på 1 VM med docker installert. Oppsettet egner seg best for små team og kan brukes som et startpunkt for å raskt komme i gang med en CTF. 
 
 > [!CAUTION]
@@ -73,8 +76,10 @@ docker swarm init
 docker node update --label-add "name=linux-1" $(docker node ls -q)
 ```
 
+Deretter cloner vi ned ctfd repoet og navigerer til dette:
+
 ```shell
-git clone https://github.com/ctfd/ctfd
+git clone https://github.com/ctfd/ctfd && cd ctfd
 ```
 
 ## Lisens og kilde
