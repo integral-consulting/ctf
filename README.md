@@ -2,10 +2,11 @@
 
 Dette repoet dokumenterer hvordan man setter opp [CTFd][ctfd] på 1 VM med docker installert. Oppsettet egner seg best for små team og kan brukes som et startpunkt for å raskt komme i gang med en CTF. 
 
-> Er planen å gjennomføre en større CTF med mange deltakere bør man i tillegg se på orkestreringsmuligheter med flere noder i docker swarm (som er benyttet i dette eksemplet) eller i kubernetes.
-
-> [!WARNING]
+> [!CAUTION]
 > Dette oppsettet er å anse som en Proof-of-Concept på hvordan man kan self-hoste [CTFd][ctfd] og inneholder noen "snarveier" til mål som går på bekostning av gode sikkerhetsprinsipper. Disse snarveiene er markert i instruksjoene. Det anbefales derfor å sette dette opp i eget lukket miljø, med mindre man har utbedret snarveiene.
+
+> [!NOTE]
+> Er planen å gjennomføre en større CTF med mange deltakere bør man vurdere å se på hvordan løsningen kan deployes i en orkestreringsplattform som kubernetes eller docker swarm. Se [ctfd-deploybot] som tar utgangspunktet i docker swarm for dette.
 
 ## Forutsetninger
 
@@ -49,7 +50,7 @@ pip install ansible
 For å hoste [CTFd][ctfd] selv trenger vi docker og docker compose.
 Dette kan installeres med ansible playbook'en [config.yml][config] i repoet, eller ved å følge docker sin [get started][docker-get-started] guide.
 
-For å benytte ansible, oppdater [hosts][hosts] med hostname, ip og brukernavn på maskinen som skal konfigureres.
+For å benytte ansible, oppdater [hosts] med hostname, ip og brukernavn på maskinen som skal konfigureres.
 Deretter kjør:
 
 ```shell
@@ -87,3 +88,4 @@ All dokumentasjon og konfigurasjon i dette repoet er også delt under [Apache Li
 [hosts]: ./hosts
 [config]: ./config.yml
 [ctfd-whale]: https://github.com/frankli0324/ctfd-whale/blob/master/docs/install.md
+[ctfd-deploybot]: https://docs.ctfd.io/enterprise/deploybot/cluster/
