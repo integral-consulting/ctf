@@ -1,8 +1,5 @@
 # ctf
 
-> [!WARNING]
-> Instruksjonene er under utarbeidelse...
-
 Dette repoet dokumenterer hvordan man setter opp [CTFd][ctfd] på 1 VM med docker installert. Oppsettet egner seg best for små team og kan brukes som et startpunkt for å raskt komme i gang med en CTF. 
 
 > [!CAUTION]
@@ -82,6 +79,133 @@ Deretter cloner vi ned ctfd repoet og navigerer til dette:
 git clone https://github.com/ctfd/ctfd && cd ctfd
 ```
 
+Dette repoet inneholder `docker-compose.yml` som vi må oppdatere for at [whale-pluginen][ctfd-whale] skal fungere.
+Legg derfor til følgende under `services:`
+
+```yml
+  frps:
+    image: glzjin/frp
+    restart: always
+    volumes:
+      - ./conf/frp:/conf
+    entrypoint:
+      - /usr/local/bin/frps
+      - -c
+      - /conf/frps.ini
+    ports:
+      - 10000-10100:10000-10100  # for "direct" challenges
+      - 8001:8001  # for "http" challenges
+    networks:
+      default:  # frps ports should be mapped to host
+      frp_connect:
+
+  frpc:
+    image: glzjin/frp:latest
+    restart: always
+    volumes:
+      - ./conf/frp:/conf/
+    entrypoint:
+      - /usr/local/bin/frpc
+      - -c
+      - /conf/frpc.ini
+    depends_on:
+      - frps #need frps to run first
+    networks:
+      frp_containers:
+      frp_connect:
+        ipv4_address: 172.1.0.3
+``` 
+
+I tillegg må vi legge til følgende under `networks`:
+
+```yml
+      frp_connect:
+      driver: bridge
+      internal: true
+      attachable: true
+      ipam:
+        config:
+          - subnet: 172.1.0.0/16
+    frp_containers:
+      driver: overlay
+      internal: true
+      attachable: true
+      ipam:
+        config:
+          - subnet: 172.2.0.0/16
+```
+
+Deretter må vi opprette en mappe med konfigurasjon for frps(fast reverse proxy):
+
+```shell
+mkdir -p conf/frps
+```
+
+Her trenger vi 2 filer:
+
+frps.ini med følgende innhold:
+
+```ini
+[common]
+# following ports must not overlap with "direct" port range defined in the compose file
+bind_port = 7987  # port for frpc to connect to
+vhost_http_port = 8001  # port for mapping http challenges
+token = your_token
+subdomain_host = ctf.example.com # hostname that's mapped to frps by some reverse proxy (or IS frps itself)
+```
+
+og frpc.ini
+
+```
+[common]
+token = your_token
+server_addr = frps
+server_port = 7897  # == frps.bind_port
+admin_addr = 172.1.0.3  # refer to "Security"
+admin_port = 7400
+```
+
+>![CAUTION]
+> Det er ikke anbefalt å eksponere docker.socket'en til kjørende containere. Dette bør man finne andre løsninger på hvis man setter opp løsningen på en åpen plattform.
+
+Videre trenger ctfd plattformen tilgang på docker socket'en på hosten for å kunne spinne opp containere når brukere skal starte oppgaver som er avhengig av andre docker containere.
+Dette gjør vi gjennom å oppdatere `docker-compose.yml` med følgende verdier under `services: ctfd:`:
+
+```yml
+services:
+    ctfd:
+        ...
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+        depends_on:
+            - frpc #need frpc to run ahead
+        networks:
+            ...
+            frp_connect:
+```
+
+Det som gjenstår nå er å legge til [ctfd-whale]-pluginen, dette gjør vi ved å clone ned deres repo inn i plugin folderen til CTFd på følgende måte:
+
+```shell
+git clone https://github.com/frankli0324/CTFd-Whale CTFd/plugins/ctfd-whale --depth=1
+```
+
+Nå skal vi være klar til å kjøre opp løsningen:
+
+```shell
+# For eldre docker
+docker-compose build
+docker-compose up -d
+
+# For nyere docker
+docker compose build
+docker compose up -d
+```
+
+Nå skal løsningen kjøre og være tilgjengelig på http://localhost:8080 (forutsatt at man sitter på samme nettverk som serveren benyttet til å kjøre løsningen).
+
+Deretter kan man sette opp CTF arrangementet som beskrevet i [ctfd sin getting started][ctfd-getting-started].
+
 ## Lisens og kilde
 
 All dokumentasjon og konfigurasjon i dette repoet er også delt under [Apache License 2.0](LICENSE) slik som [ctfd]-løsningen også er.
@@ -94,3 +218,4 @@ All dokumentasjon og konfigurasjon i dette repoet er også delt under [Apache Li
 [config]: ./config.yml
 [ctfd-whale]: https://github.com/frankli0324/ctfd-whale/blob/master/docs/install.md
 [ctfd-deploybot]: https://docs.ctfd.io/enterprise/deploybot/cluster/
+[ctfd-getting-started]: https://docs.ctfd.io/tutorials/getting-started/
