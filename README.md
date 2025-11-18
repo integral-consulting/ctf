@@ -167,7 +167,7 @@ admin_port = 7400
 
 
 > [!CAUTION]
-> Det er ikke anbefalt å eksponere docker.socket'en til kjørende containere. Dette bør man finne andre løsninger på hvis man setter opp løsningen på en åpen plattform.
+> Det er ikke anbefalt å eksponere docker.socket'en til kjørende containere i et produksjonsmiljø. Dette bør man finne andre løsninger på hvis man setter opp løsningen på en åpen plattform.
 
 Videre trenger ctfd plattformen tilgang på docker socket'en på hosten for å kunne spinne opp containere når brukere skal starte oppgaver som er avhengig av andre docker containere.
 Dette gjør vi gjennom å oppdatere `docker-compose.yml` med følgende verdier under `services: ctfd:`:
