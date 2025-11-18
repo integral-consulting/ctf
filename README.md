@@ -165,7 +165,8 @@ admin_addr = 172.1.0.3  # refer to "Security"
 admin_port = 7400
 ```
 
-> ![CAUTION]
+
+> [!CAUTION]
 > Det er ikke anbefalt å eksponere docker.socket'en til kjørende containere. Dette bør man finne andre løsninger på hvis man setter opp løsningen på en åpen plattform.
 
 Videre trenger ctfd plattformen tilgang på docker socket'en på hosten for å kunne spinne opp containere når brukere skal starte oppgaver som er avhengig av andre docker containere.
