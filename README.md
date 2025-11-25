@@ -220,3 +220,4 @@ All dokumentasjon og konfigurasjon i dette repoet er også delt under [Apache Li
 [ctfd-whale]: https://github.com/frankli0324/ctfd-whale/blob/master/docs/install.md
 [ctfd-deploybot]: https://docs.ctfd.io/enterprise/deploybot/cluster/
 [ctfd-getting-started]: https://docs.ctfd.io/tutorials/getting-started/
+
